@@ -1,57 +1,61 @@
 import { logger } from '../utils/logger.js';
 import { config } from '../config/environment.js';
 
+let RedisClient = null;
+try {
+  const { Redis } = await import('@upstash/redis');
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    RedisClient = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+    logger.info('Upstash Redis cache initialized.');
+  } else {
+    logger.info('Upstash Redis credentials not found, falling back to LRU Memory Cache.');
+  }
+} catch (e) {
+  logger.warn('Upstash Redis module not installed, falling back to LRU Memory Cache.');
+}
+
 /**
- * In-memory LRU (Least Recently Used) cache implementation.
- * Reduces redundant Gemini API calls for similar queries, improving
- * response times and reducing API costs.
- *
- * @class CacheService
+ * Scalable Cache Service implementing Redis for distributed caching
+ * with a fallback to in-memory LRU caching.
  */
 class CacheService {
-  /**
-   * Creates a new CacheService instance.
-   * @param {number} [maxSize] - Maximum number of entries to store
-   * @param {number} [ttl] - Time-to-live for entries in milliseconds
-   */
   constructor(maxSize = config.cache.maxSize, ttl = config.cache.ttl) {
-    /** @type {Map<string, {value: *, timestamp: number}>} */
     this.store = new Map();
-
-    /** @type {number} */
     this.maxSize = maxSize;
-
-    /** @type {number} */
     this.ttl = ttl;
-
-    /** @type {{hits: number, misses: number}} */
     this.stats = { hits: 0, misses: 0 };
+    this.redis = RedisClient;
   }
 
-  /**
-   * Generates a normalized cache key from a string input.
-   * Normalizes the input by lowercasing and removing extra whitespace.
-   * @param {string} input - The raw input to use as a key
-   * @returns {string} Normalized cache key
-   */
   generateKey(input) {
-    if (typeof input !== 'string') {
-      return '';
-    }
+    if (typeof input !== 'string') return '';
     return input.toLowerCase().replace(/\s+/g, ' ').trim();
   }
 
-  /**
-   * Retrieves a value from the cache.
-   * Returns null if the key doesn't exist or has expired.
-   * Expired entries are automatically evicted.
-   * @param {string} key - The cache key to look up
-   * @returns {*|null} The cached value, or null if not found/expired
-   */
-  get(key) {
+  async get(key) {
     const normalizedKey = this.generateKey(key);
-    const entry = this.store.get(normalizedKey);
+    
+    if (this.redis) {
+      try {
+        const value = await this.redis.get(normalizedKey);
+        if (value) {
+          this.stats.hits++;
+          logger.debug('Redis cache hit', { key: normalizedKey });
+          return value;
+        } else {
+          this.stats.misses++;
+          return null;
+        }
+      } catch (error) {
+        logger.error('Redis get error', { error: error.message });
+      }
+    }
 
+    // Fallback to Memory
+    const entry = this.store.get(normalizedKey);
     if (!entry) {
       this.stats.misses++;
       return null;
@@ -61,61 +65,63 @@ class CacheService {
     if (isExpired) {
       this.store.delete(normalizedKey);
       this.stats.misses++;
-      logger.debug('Cache entry expired', { key: normalizedKey });
+      logger.debug('Memory cache entry expired', { key: normalizedKey });
       return null;
     }
 
-    // Move to end (most recently used) for LRU behavior
     this.store.delete(normalizedKey);
     this.store.set(normalizedKey, entry);
-
     this.stats.hits++;
-    logger.debug('Cache hit', { key: normalizedKey });
+    logger.debug('Memory cache hit', { key: normalizedKey });
     return entry.value;
   }
 
-  /**
-   * Stores a value in the cache.
-   * If the cache is full, evicts the least recently used entry.
-   * @param {string} key - The cache key
-   * @param {*} value - The value to cache
-   */
-  set(key, value) {
+  async set(key, value) {
     const normalizedKey = this.generateKey(key);
 
-    // Evict LRU entry if at capacity
+    if (this.redis) {
+      try {
+        await this.redis.set(normalizedKey, value, { ex: Math.floor(this.ttl / 1000) });
+        logger.debug('Redis cache set', { key: normalizedKey });
+        return;
+      } catch (error) {
+        logger.error('Redis set error', { error: error.message });
+      }
+    }
+
+    // Fallback to Memory
     if (this.store.size >= this.maxSize && !this.store.has(normalizedKey)) {
       const oldestKey = this.store.keys().next().value;
       this.store.delete(oldestKey);
-      logger.debug('Cache eviction (LRU)', { evictedKey: oldestKey });
+      logger.debug('Memory cache eviction (LRU)', { evictedKey: oldestKey });
     }
 
     this.store.set(normalizedKey, {
       value,
       timestamp: Date.now(),
     });
-
-    logger.debug('Cache set', { key: normalizedKey, storeSize: this.store.size });
+    logger.debug('Memory cache set', { key: normalizedKey, storeSize: this.store.size });
   }
 
-  /**
-   * Clears all entries from the cache and resets statistics.
-   */
-  clear() {
+  async clear() {
+    if (this.redis) {
+      try {
+        await this.redis.flushdb();
+      } catch (e) {
+        logger.error('Redis flush error', { error: e.message });
+      }
+    }
     this.store.clear();
     this.stats = { hits: 0, misses: 0 };
     logger.info('Cache cleared');
   }
 
-  /**
-   * Returns current cache statistics.
-   * @returns {{size: number, maxSize: number, hits: number, misses: number, hitRate: string}}
-   */
   getStats() {
     const total = this.stats.hits + this.stats.misses;
     const hitRate = total > 0 ? ((this.stats.hits / total) * 100).toFixed(1) : '0.0';
 
     return {
+      type: this.redis ? 'redis' : 'memory',
       size: this.store.size,
       maxSize: this.maxSize,
       hits: this.stats.hits,
@@ -125,5 +131,4 @@ class CacheService {
   }
 }
 
-/** @type {CacheService} Singleton cache instance */
 export const cacheService = new CacheService();

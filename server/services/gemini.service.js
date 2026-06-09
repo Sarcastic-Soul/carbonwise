@@ -81,7 +81,7 @@ export async function generateChatResponse(userMessage, conversationHistory = []
 
   // Check cache for similar queries (only for stateless queries without history)
   if (conversationHistory.length === 0) {
-    const cachedResponse = cacheService.get(userMessage);
+    const cachedResponse = await cacheService.get(userMessage);
     if (cachedResponse) {
       logger.debug('Returning cached chat response');
       return { response: cachedResponse, cached: true };
@@ -104,7 +104,7 @@ export async function generateChatResponse(userMessage, conversationHistory = []
 
     // Cache the response for future similar queries
     if (conversationHistory.length === 0) {
-      cacheService.set(userMessage, responseText);
+      await cacheService.set(userMessage, responseText);
     }
 
     logger.info('Gemini response generated', {
@@ -151,7 +151,7 @@ For each tip, include:
 Format with markdown headers and bullet points for readability.`;
 
   const cacheKey = `tips_${footprintData.totalTonnes}`;
-  const cachedTips = cacheService.get(cacheKey);
+  const cachedTips = await cacheService.get(cacheKey);
   if (cachedTips) {
     return { tips: cachedTips, cached: true };
   }
@@ -160,7 +160,7 @@ Format with markdown headers and bullet points for readability.`;
     const result = await model.generateContent(prompt);
     const tipsText = result.response.text();
 
-    cacheService.set(cacheKey, tipsText);
+    await cacheService.set(cacheKey, tipsText);
 
     logger.info('Personalized tips generated', {
       totalTonnes: footprintData.totalTonnes,

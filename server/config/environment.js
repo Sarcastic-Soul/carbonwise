@@ -7,7 +7,6 @@ dotenv.config();
  * Centralized application configuration.
  * All environment-dependent values are sourced from environment variables
  * with sensible defaults for development.
- * @type {Object}
  */
 export const config = Object.freeze({
   /** @type {number} Server port */

@@ -57,6 +57,7 @@ router.post('/', calculatorValidationRules, handleValidationErrors, async (req, 
 router.get('/factors', (_req, res) => {
   try {
     const factors = getAvailableFactors();
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.status(HTTP_STATUS.OK).json(createSuccessResponse(factors, 'Emission factors retrieved.'));
   } catch (error) {
     logger.error('Factors endpoint error', { error: error.message });
