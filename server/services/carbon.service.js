@@ -209,10 +209,11 @@ export function calculateTotalFootprint(activities) {
  */
 export function calculateEquivalencies(totalKg) {
   if (!isPositiveNumber(totalKg)) {
-    return {};
+    return /** @type {any} */ ({});
   }
 
   const totalTonnes = totalKg / 1000;
+  /** @type {any} */
   const result = {};
 
   for (const [key, data] of Object.entries(EQUIVALENCY_FACTORS)) {
@@ -236,6 +237,7 @@ export function compareWithBenchmarks(userTonnes) {
     return { benchmarks: BENCHMARK_AVERAGES, userTonnes: 0 };
   }
 
+  /** @type {any} */
   const comparisons = {};
 
   for (const [region, average] of Object.entries(BENCHMARK_AVERAGES)) {

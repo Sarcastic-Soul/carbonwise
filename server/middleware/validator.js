@@ -90,7 +90,7 @@ export function handleValidationErrors(req, res, next) {
 
   if (!errors.isEmpty()) {
     const formattedErrors = errors.array().map((error) => ({
-      field: error.path,
+      field: /** @type {any} */ (error).path || /** @type {any} */ (error).param,
       message: error.msg,
     }));
 

@@ -8,7 +8,7 @@ import { HTTP_STATUS } from '../utils/constants.js';
  * Catches all unhandled errors and returns a standardized error response.
  * In production, error details are hidden to prevent information leakage.
  * Must have 4 parameters for Express to recognize it as error middleware.
- * @param {Error} err - The error object
+ * @param {any} err - The error object
  * @param {import('express').Request} _req - Express request object
  * @param {import('express').Response} res - Express response object
  * @param {import('express').NextFunction} _next - Express next function

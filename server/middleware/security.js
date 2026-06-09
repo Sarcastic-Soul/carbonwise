@@ -6,7 +6,7 @@ import { config } from '../config/environment.js';
  * Configures and returns Helmet middleware with strict Content Security Policy.
  * Helmet sets various HTTP headers to help protect the app from well-known
  * web vulnerabilities (XSS, clickjacking, MIME sniffing, etc.).
- * @returns {Function} Configured Helmet middleware
+ * @returns {import('express').RequestHandler} Configured Helmet middleware
  */
 export function createSecurityHeaders() {
   return helmet({
@@ -39,7 +39,7 @@ export function createSecurityHeaders() {
  * Configures and returns CORS middleware.
  * In production, restricts origins to the deployed domain.
  * In development, allows all origins for ease of testing.
- * @returns {Function} Configured CORS middleware
+ * @returns {import('express').RequestHandler} Configured CORS middleware
  */
 export function createCorsMiddleware() {
   const corsOptions = {

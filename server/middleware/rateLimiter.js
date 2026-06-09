@@ -6,7 +6,7 @@ import { createErrorResponse } from '../utils/helpers.js';
 /**
  * Creates a rate limiter middleware to prevent abuse and brute-force attacks.
  * Limits the number of requests a single IP can make within a time window.
- * @returns {Function} Configured rate limiter middleware
+ * @returns {import('express').RequestHandler} Configured rate limiter middleware
  */
 export function createRateLimiter() {
   return rateLimit({
@@ -19,7 +19,8 @@ export function createRateLimiter() {
       HTTP_STATUS.TOO_MANY_REQUESTS
     ),
     keyGenerator: (req) => {
-      return req.ip || req.headers['x-forwarded-for'] || 'unknown';
+      const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+      return Array.isArray(ip) ? ip[0] : ip;
     },
   });
 }
@@ -27,7 +28,7 @@ export function createRateLimiter() {
 /**
  * Creates a stricter rate limiter specifically for AI chat endpoints.
  * AI calls are expensive, so they get a tighter limit.
- * @returns {Function} Configured rate limiter for AI endpoints
+ * @returns {import('express').RequestHandler} Configured rate limiter for AI endpoints
  */
 export function createAiRateLimiter() {
   return rateLimit({
@@ -40,7 +41,8 @@ export function createAiRateLimiter() {
       HTTP_STATUS.TOO_MANY_REQUESTS
     ),
     keyGenerator: (req) => {
-      return req.ip || req.headers['x-forwarded-for'] || 'unknown';
+      const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+      return Array.isArray(ip) ? ip[0] : ip;
     },
   });
 }
