@@ -2,6 +2,9 @@
 
 An AI-powered platform that helps individuals understand, track, and reduce their carbon footprint through personalized insights and science-based calculations.
 
+- Frontend = https://carbonwise-139415254857.asia-south1.run.app
+- Backend = https://carbonwise-139415254857.asia-south1.run.app/api/health
+
 ## 📚 Technical Documentation
 
 For in-depth analyses of our engineering decisions and evaluation compliance, refer to the dedicated guides:
