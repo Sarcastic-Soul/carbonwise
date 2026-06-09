@@ -24,8 +24,7 @@ const router = Router();
  * @param {Object} [req.body.energy] - Energy usage
  * @param {string} [req.body.diet] - Diet type
  * @param {Object} [req.body.shopping] - Shopping habits
- * @returns {Object} 200 - Calculated footprint with breakdown and equivalencies
- * @returns {Object} 400 - Validation error
+ * @returns {Object} 200 - Calculated footprint with breakdown (or 400 on Validation error)
  */
 router.post('/', calculatorValidationRules, handleValidationErrors, async (req, res) => {
   try {

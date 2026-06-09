@@ -18,9 +18,7 @@ const router = Router();
  * @param {Object} req.body - User's calculated carbon footprint data
  * @param {number} req.body.totalTonnes - Total annual emissions in tonnes
  * @param {Object} req.body.breakdown - Category breakdown
- * @returns {Object} 200 - Personalized tips
- * @returns {Object} 400 - Missing footprint data
- * @returns {Object} 500 - AI generation error
+ * @returns {Object} 200 - AI-generated personalized eco tips (or 400 on missing footprint data, 500 on generation error)
  */
 router.post('/', async (req, res) => {
   try {

@@ -19,9 +19,7 @@ const router = Router();
  * @param {Object} req.body - Request body
  * @param {string} req.body.message - User's chat message (1-2000 chars)
  * @param {Array} [req.body.history] - Previous conversation history
- * @returns {Object} 200 - AI response with cache status
- * @returns {Object} 400 - Validation error
- * @returns {Object} 500 - Server error
+ * @returns {Object} 200 - AI chat response (or 400 on validation error, 500 on server error)
  */
 router.post('/', chatValidationRules, handleValidationErrors, async (req, res) => {
   try {
