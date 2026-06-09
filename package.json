@@ -1,0 +1,47 @@
+{
+  "name": "carbonwise",
+  "version": "1.0.0",
+  "description": "CarbonWise — AI-powered Carbon Footprint Awareness Platform that helps individuals understand, track, and reduce their carbon footprint through personalized insights.",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --forceExit --detectOpenHandles",
+    "test:unit": "node --experimental-vm-modules node_modules/.bin/jest tests/unit --forceExit",
+    "test:integration": "node --experimental-vm-modules node_modules/.bin/jest tests/integration --forceExit --detectOpenHandles",
+    "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage --forceExit --detectOpenHandles",
+    "lint": "eslint server/ tests/",
+    "lint:fix": "eslint server/ tests/ --fix",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "compression": "^1.7.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.0.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "eslint": "^8.57.1",
+    "jest": "^29.7.0",
+    "prettier": "^3.4.2",
+    "supertest": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "carbon-footprint",
+    "sustainability",
+    "ai-assistant",
+    "gemini",
+    "environment",
+    "climate-change"
+  ],
+  "license": "MIT"
+}

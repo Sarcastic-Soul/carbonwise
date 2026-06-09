@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CarbonWise — AI-powered Carbon Footprint Awareness Platform. Track, understand, and reduce your carbon footprint with personalized insights and science-based calculations.">
+  <meta name="theme-color" content="#1a7a4c">
+  <title>CarbonWise — Carbon Footprint Awareness Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <!-- Skip Navigation Link for Accessibility -->
+  <a href="#main-content" class="skip-link" id="skip-nav">Skip to main content</a>
+
+  <!-- Header -->
+  <header role="banner" class="site-header">
+    <div class="container header-inner">
+      <div class="logo" aria-label="CarbonWise home">
+        <span class="logo-icon" aria-hidden="true">🌍</span>
+        <span class="logo-text">CarbonWise</span>
+      </div>
+      <nav role="navigation" aria-label="Main navigation">
+        <ul class="nav-list" id="main-nav">
+          <li><button class="nav-btn active" data-section="dashboard" id="nav-dashboard" aria-current="page">Dashboard</button></li>
+          <li><button class="nav-btn" data-section="calculator" id="nav-calculator">Calculator</button></li>
+          <li><button class="nav-btn" data-section="chat" id="nav-chat">AI Assistant</button></li>
+          <li><button class="nav-btn" data-section="tips" id="nav-tips">Eco Tips</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" role="main" class="container">
+
+    <!-- Dashboard Section -->
+    <section id="section-dashboard" class="section active" aria-labelledby="dashboard-heading">
+      <h1 id="dashboard-heading">Your Carbon Dashboard</h1>
+      <p class="section-description">Track your environmental impact and see how you compare to global averages.</p>
+
+      <div class="dashboard-grid">
+        <!-- Total Footprint Card -->
+        <article class="card card-highlight" aria-label="Total carbon footprint">
+          <h2 class="card-title">Annual Footprint</h2>
+          <div class="footprint-display">
+            <span class="footprint-value" id="total-footprint" aria-live="polite">0.00</span>
+            <span class="footprint-unit">tonnes CO₂e</span>
+          </div>
+          <p class="footprint-context" id="footprint-context">Complete the calculator to see your footprint.</p>
+        </article>
+
+        <!-- Breakdown Card -->
+        <article class="card" aria-label="Footprint breakdown by category">
+          <h2 class="card-title">Category Breakdown</h2>
+          <div class="breakdown-bars" id="breakdown-bars" role="img" aria-label="Bar chart showing emissions by category">
+            <div class="breakdown-item">
+              <label class="breakdown-label" id="label-transport">Transport</label>
+              <div class="bar-container" role="progressbar" aria-labelledby="label-transport" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="bar bar-transport" id="bar-transport" style="width: 0%"></div>
+              </div>
+              <span class="bar-value" id="val-transport">0 kg</span>
+            </div>
+            <div class="breakdown-item">
+              <label class="breakdown-label" id="label-energy">Energy</label>
+              <div class="bar-container" role="progressbar" aria-labelledby="label-energy" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="bar bar-energy" id="bar-energy" style="width: 0%"></div>
+              </div>
+              <span class="bar-value" id="val-energy">0 kg</span>
+            </div>
+            <div class="breakdown-item">
+              <label class="breakdown-label" id="label-diet">Diet</label>
+              <div class="bar-container" role="progressbar" aria-labelledby="label-diet" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="bar bar-diet" id="bar-diet" style="width: 0%"></div>
+              </div>
+              <span class="bar-value" id="val-diet">0 kg</span>
+            </div>
+            <div class="breakdown-item">
+              <label class="breakdown-label" id="label-shopping">Shopping</label>
+              <div class="bar-container" role="progressbar" aria-labelledby="label-shopping" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="bar bar-shopping" id="bar-shopping" style="width: 0%"></div>
+              </div>
+              <span class="bar-value" id="val-shopping">0 kg</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Equivalencies Card -->
+        <article class="card" aria-label="Impact equivalencies">
+          <h2 class="card-title">What Your Footprint Equals</h2>
+          <ul class="equivalency-list" id="equivalency-list" aria-live="polite">
+            <li class="equivalency-item">
+              <span class="equiv-icon" aria-hidden="true">🌳</span>
+              <span class="equiv-text"><strong id="equiv-trees">0</strong> trees needed to offset per year</span>
+            </li>
+            <li class="equivalency-item">
+              <span class="equiv-icon" aria-hidden="true">🚗</span>
+              <span class="equiv-text"><strong id="equiv-driving">0</strong> km of driving equivalent</span>
+            </li>
+            <li class="equivalency-item">
+              <span class="equiv-icon" aria-hidden="true">✈️</span>
+              <span class="equiv-text"><strong id="equiv-flights">0</strong> domestic flights</span>
+            </li>
+            <li class="equivalency-item">
+              <span class="equiv-icon" aria-hidden="true">📱</span>
+              <span class="equiv-text"><strong id="equiv-charges">0</strong> smartphone charges</span>
+            </li>
+          </ul>
+        </article>
+
+        <!-- Benchmark Comparison Card -->
+        <article class="card" aria-label="Comparison with global averages">
+          <h2 class="card-title">How You Compare</h2>
+          <div class="benchmark-list" id="benchmark-list">
+            <div class="benchmark-item">
+              <span class="benchmark-label">Global Avg</span>
+              <div class="benchmark-bar-container">
+                <div class="benchmark-bar" style="width: 32%"></div>
+              </div>
+              <span class="benchmark-value">4.7t</span>
+            </div>
+            <div class="benchmark-item">
+              <span class="benchmark-label">India</span>
+              <div class="benchmark-bar-container">
+                <div class="benchmark-bar" style="width: 13%"></div>
+              </div>
+              <span class="benchmark-value">1.9t</span>
+            </div>
+            <div class="benchmark-item">
+              <span class="benchmark-label">EU Avg</span>
+              <div class="benchmark-bar-container">
+                <div class="benchmark-bar" style="width: 46%"></div>
+              </div>
+              <span class="benchmark-value">6.8t</span>
+            </div>
+            <div class="benchmark-item">
+              <span class="benchmark-label">USA</span>
+              <div class="benchmark-bar-container">
+                <div class="benchmark-bar" style="width: 100%"></div>
+              </div>
+              <span class="benchmark-value">15.5t</span>
+            </div>
+            <div class="benchmark-item benchmark-you">
+              <span class="benchmark-label">You</span>
+              <div class="benchmark-bar-container">
+                <div class="benchmark-bar benchmark-bar-you" id="benchmark-you-bar" style="width: 0%"></div>
+              </div>
+              <span class="benchmark-value" id="benchmark-you-value">0t</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section id="section-calculator" class="section" aria-labelledby="calculator-heading" hidden>
+      <h1 id="calculator-heading">Carbon Footprint Calculator</h1>
+      <p class="section-description">Enter your daily activities to calculate your annual carbon footprint.</p>
+
+      <form id="calculator-form" class="calculator-form" novalidate>
+        <!-- Transport -->
+        <fieldset class="calc-fieldset">
+          <legend>
+            <span class="fieldset-icon" aria-hidden="true">🚗</span>
+            Transportation
+          </legend>
+          <div class="form-group">
+            <label for="transport-type">Vehicle Type</label>
+            <select id="transport-type" name="transport-type" aria-describedby="transport-type-help">
+              <option value="">Select transport type</option>
+              <option value="car_gasoline">Car (Gasoline)</option>
+              <option value="car_diesel">Car (Diesel)</option>
+              <option value="car_hybrid">Car (Hybrid)</option>
+              <option value="car_electric">Car (Electric)</option>
+              <option value="bus">Public Bus</option>
+              <option value="train">Train / Metro</option>
+              <option value="motorcycle">Motorcycle</option>
+              <option value="domestic_flight">Domestic Flight</option>
+              <option value="long_haul_flight">Long-Haul Flight</option>
+              <option value="bicycle">Bicycle</option>
+              <option value="walking">Walking</option>
+            </select>
+            <span id="transport-type-help" class="form-help">Choose your primary mode of transport.</span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="transport-distance">Distance per trip (km)</label>
+              <input type="number" id="transport-distance" name="transport-distance" min="0" max="100000" step="0.1" placeholder="e.g. 25" aria-describedby="transport-distance-help">
+              <span id="transport-distance-help" class="form-help">Average one-way distance.</span>
+            </div>
+            <div class="form-group">
+              <label for="transport-frequency">Frequency</label>
+              <select id="transport-frequency" name="transport-frequency">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Energy -->
+        <fieldset class="calc-fieldset">
+          <legend>
+            <span class="fieldset-icon" aria-hidden="true">⚡</span>
+            Home Energy
+          </legend>
+          <div class="form-group">
+            <label for="energy-type">Energy Source</label>
+            <select id="energy-type" name="energy-type">
+              <option value="">Select energy source</option>
+              <option value="electricity">Electricity</option>
+              <option value="natural_gas">Natural Gas</option>
+              <option value="heating_oil">Heating Oil</option>
+              <option value="lpg">LPG</option>
+              <option value="wood">Wood / Biomass</option>
+              <option value="solar">Solar Power</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="energy-amount">Monthly Usage</label>
+            <input type="number" id="energy-amount" name="energy-amount" min="0" max="100000" step="0.1" placeholder="e.g. 300" aria-describedby="energy-amount-help">
+            <span id="energy-amount-help" class="form-help">Enter monthly usage in the relevant unit (kWh, m³, litres, or kg).</span>
+          </div>
+        </fieldset>
+
+        <!-- Diet -->
+        <fieldset class="calc-fieldset">
+          <legend>
+            <span class="fieldset-icon" aria-hidden="true">🍽️</span>
+            Diet
+          </legend>
+          <div class="form-group">
+            <label for="diet-type">Dietary Preference</label>
+            <select id="diet-type" name="diet-type" aria-describedby="diet-type-help">
+              <option value="">Select your diet</option>
+              <option value="high_meat">High Meat (daily)</option>
+              <option value="medium_meat">Medium Meat (few times/week)</option>
+              <option value="low_meat">Low Meat (once/week)</option>
+              <option value="pescatarian">Pescatarian</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="vegan">Vegan</option>
+            </select>
+            <span id="diet-type-help" class="form-help">Select the option closest to your eating habits.</span>
+          </div>
+        </fieldset>
+
+        <!-- Shopping -->
+        <fieldset class="calc-fieldset">
+          <legend>
+            <span class="fieldset-icon" aria-hidden="true">🛍️</span>
+            Shopping & Consumption
+          </legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="shopping-type">Purchase Category</label>
+              <select id="shopping-type" name="shopping-type">
+                <option value="">Select category</option>
+                <option value="clothing">Clothing</option>
+                <option value="electronics_small">Small Electronics</option>
+                <option value="electronics_large">Large Electronics</option>
+                <option value="furniture">Furniture</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="shopping-quantity">Items per Month</label>
+              <input type="number" id="shopping-quantity" name="shopping-quantity" min="0" max="1000" step="1" placeholder="e.g. 3">
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="calculate-btn">
+            Calculate My Footprint
+          </button>
+          <button type="reset" class="btn btn-secondary" id="reset-btn">
+            Reset
+          </button>
+        </div>
+      </form>
+
+      <!-- Calculator Results -->
+      <div id="calculator-results" class="calculator-results" hidden aria-live="polite" role="region" aria-label="Calculation results">
+        <h2>Your Results</h2>
+        <div class="results-summary" id="results-summary"></div>
+      </div>
+    </section>
+
+    <!-- Chat Section -->
+    <section id="section-chat" class="section" aria-labelledby="chat-heading" hidden>
+      <h1 id="chat-heading">AI Carbon Assistant</h1>
+      <p class="section-description">Ask CarbonWise anything about carbon footprints, sustainability, or eco-friendly living.</p>
+
+      <div class="chat-container" role="log" aria-label="Chat conversation" aria-live="polite" id="chat-log">
+        <div class="chat-messages" id="chat-messages">
+          <div class="message message-assistant" role="article" aria-label="Assistant message">
+            <div class="message-avatar" aria-hidden="true">🌍</div>
+            <div class="message-content">
+              <p>Hello! I'm <strong>CarbonWise</strong>, your AI carbon footprint assistant. I can help you:</p>
+              <ul>
+                <li>Understand your carbon footprint</li>
+                <li>Find ways to reduce your emissions</li>
+                <li>Answer questions about climate and sustainability</li>
+                <li>Calculate the impact of specific activities</li>
+              </ul>
+              <p>What would you like to know?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form id="chat-form" class="chat-input-area" aria-label="Chat input">
+        <label for="chat-input" class="visually-hidden">Type your message</label>
+        <input
+          type="text"
+          id="chat-input"
+          class="chat-input"
+          placeholder="Ask about carbon footprints, sustainability tips..."
+          autocomplete="off"
+          maxlength="2000"
+          aria-describedby="chat-char-count"
+        >
+        <span id="chat-char-count" class="char-count" aria-live="polite">0 / 2000</span>
+        <button type="submit" class="btn btn-primary chat-send-btn" id="chat-send-btn" aria-label="Send message">
+          Send
+        </button>
+      </form>
+    </section>
+
+    <!-- Tips Section -->
+    <section id="section-tips" class="section" aria-labelledby="tips-heading" hidden>
+      <h1 id="tips-heading">Personalized Eco Tips</h1>
+      <p class="section-description">Get AI-powered recommendations tailored to your carbon footprint profile.</p>
+
+      <div id="tips-container">
+        <div class="tips-prompt" id="tips-prompt">
+          <p>Complete the <button class="link-btn" data-section="calculator" aria-label="Go to calculator">Carbon Calculator</button> first, then come back here for personalized tips based on your results.</p>
+        </div>
+        <div id="tips-content" class="tips-content" hidden aria-live="polite"></div>
+        <button class="btn btn-primary" id="generate-tips-btn" hidden>
+          Generate My Tips
+        </button>
+        <div id="tips-loading" class="loading" hidden aria-label="Loading tips">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Generating personalized tips...</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer role="contentinfo" class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2025 CarbonWise. Built for environmental awareness.</p>
+      <p class="footer-tagline">Powered by Google Gemini AI &bull; Science-based emission factors from EPA, DEFRA &amp; IPCC</p>
+    </div>
+  </footer>
+
+  <!-- Application Scripts (ES Modules) -->
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
