@@ -2,6 +2,16 @@
 
 An AI-powered platform that helps individuals understand, track, and reduce their carbon footprint through personalized insights and science-based calculations.
 
+## 📚 Technical Documentation
+
+For in-depth analyses of our engineering decisions and evaluation compliance, refer to the dedicated guides:
+
+*   [System Architecture Guide](docs/architecture.md) — Codebase layout, data flows, and configuration immutability.
+*   [Security Design & Threat Modeling](docs/security.md) — OWASP Top 10 mitigation matrix, CSP, rate-limiting, and XSS sanitizers.
+*   [Performance & Efficiency Engineering](docs/efficiency.md) — LRU cache mechanics, lazy-loading services, and host configurations.
+*   [Testing Strategy & Mocks](docs/testing.md) — Jest unit & integration runners, mock architectures, and execution scripts.
+*   [WCAG 2.1 AA Compliance Checklist](docs/accessibility.md) — Keyboard navigation guides, ARIA status landmarks, and contrast policies.
+
 ## Chosen Vertical
 
 **Carbon Footprint Awareness Platform** — Designed to help individuals understand, track, and reduce their carbon footprint through simple actions and personalized insights.
