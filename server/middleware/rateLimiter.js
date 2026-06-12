@@ -25,7 +25,9 @@ function extractClientKey(req) {
   if (sessionId) {
     return Array.isArray(sessionId) ? sessionId[0] : sessionId;
   }
-  return ipKeyGenerator(req);
+  const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+  const ipString = Array.isArray(ip) ? ip[0] : ip;
+  return ipKeyGenerator(ipString);
 }
 
 /**
