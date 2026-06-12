@@ -1,4 +1,4 @@
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import { Redis } from 'ioredis';
 import { config } from '../config/environment.js';
@@ -25,8 +25,7 @@ function extractClientKey(req) {
   if (sessionId) {
     return Array.isArray(sessionId) ? sessionId[0] : sessionId;
   }
-  const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
-  return Array.isArray(ip) ? ip[0] : ip;
+  return ipKeyGenerator(req);
 }
 
 /**
