@@ -42,7 +42,7 @@ export function createApp() {
   app.use(compression());
 
   // Parse JSON request bodies with a size limit
-  app.use(express.json({ limit: '10kb' }));
+  app.use(express.json({ limit: config.security.bodyLimit }));
 
   // General rate limiter
   app.use(createRateLimiter());

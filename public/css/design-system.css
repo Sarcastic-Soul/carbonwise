@@ -143,6 +143,15 @@ ul {
   list-style: none;
 }
 
+.error-text {
+  color: var(--color-error);
+}
+
+.highlight-text {
+  font-size: var(--font-size-2xl);
+  color: var(--color-primary-dark);
+}
+
 /* ────────────────────────────────────────────
    Accessibility Utilities
    ──────────────────────────────────────────── */
@@ -186,6 +195,11 @@ ul {
 :focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+/* Hide default focus ring for programmatically focused non-interactive elements */
+[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* ────────────────────────────────────────────

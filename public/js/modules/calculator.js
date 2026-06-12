@@ -40,6 +40,20 @@ export function initCalculator() {
 
 async function handleCalculatorSubmit(event) {
   event.preventDefault();
+
+  const form = document.getElementById('calculator-form');
+  // Update aria-invalid attributes based on HTML5 validity
+  Array.from(form.elements).forEach(el => {
+    if (el.willValidate) {
+      el.setAttribute('aria-invalid', !el.validity.valid);
+    }
+  });
+
+  if (!form.checkValidity()) {
+    announceToScreenReader('Please fix the errors in the form.');
+    return;
+  }
+
   const submitBtn = document.getElementById('calculate-btn');
   if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Calculating...'; }
 
@@ -54,7 +68,10 @@ async function handleCalculatorSubmit(event) {
   } catch (error) {
     const r = document.getElementById('calculator-results');
     const s = document.getElementById('results-summary');
-    if (r && s) { s.innerHTML = `<p style="color:var(--color-error)"><strong>Error:</strong> ${error.message}</p>`; r.hidden = false; }
+    if (r && s) { 
+      s.innerHTML = `<p class="error-text"><strong>Error:</strong> ${window.DOMPurify ? window.DOMPurify.sanitize(error.message) : error.message}</p>`; 
+      r.hidden = false; 
+    }
     announceToScreenReader('Error calculating footprint.');
   } finally {
     if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Calculate My Footprint'; }
@@ -79,7 +96,7 @@ function renderResults(data) {
   const summaryDiv = document.getElementById('results-summary');
   if (!resultsDiv || !summaryDiv) { return; }
 
-  let html = `<p><strong>Annual footprint:</strong> <span style="font-size:1.5rem;color:var(--color-primary-dark)">${data.totalTonnes} tonnes CO₂e</span> (${data.totalKg} kg)</p><h3>Breakdown</h3><ul>`;
+  let html = `<p><strong>Annual footprint:</strong> <span class="highlight-text">${data.totalTonnes} tonnes CO₂e</span> (${data.totalKg} kg)</p><h3>Breakdown</h3><ul>`;
   for (const cat of ['transport','energy','diet','shopping']) {
     if (data.breakdown[cat]) { html += `<li><strong>${data.breakdown[cat].label}:</strong> ${data.breakdown[cat].kg} kg/year</li>`; }
   }

@@ -5,7 +5,6 @@
  */
 
 import { sendChatMessage } from '../utils/api.js';
-import { escapeHtml, markdownToSafeHtml } from '../utils/sanitizer.js';
 import { announceToScreenReader } from './accessibility.js';
 
 /** @type {Array<{role: string, parts: Array<{text: string}>}>} */
@@ -92,7 +91,7 @@ async function handleChatSubmit(event) {
     announceToScreenReader('CarbonWise has responded.');
   } catch (error) {
     removeTypingIndicator(typingId);
-    appendMessage('assistant', `I'm sorry, something went wrong: ${escapeHtml(error.message)}`);
+    appendMessage('assistant', `I'm sorry, something went wrong: ${window.DOMPurify.sanitize(error.message)}`);
     announceToScreenReader('Error: could not get a response.');
   } finally {
     input.disabled = false;
@@ -126,7 +125,7 @@ function appendMessage(role, content) {
   contentDiv.classList.add('message-content');
 
   if (role === 'assistant') {
-    contentDiv.innerHTML = markdownToSafeHtml(content);
+    contentDiv.innerHTML = window.DOMPurify.sanitize(window.marked.parse(content));
   } else {
     contentDiv.textContent = content;
   }

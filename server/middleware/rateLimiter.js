@@ -19,6 +19,8 @@ export function createRateLimiter() {
       HTTP_STATUS.TOO_MANY_REQUESTS
     ),
     keyGenerator: (req) => {
+      const sessionId = req.headers['x-session-id'];
+      if (sessionId) return sessionId;
       const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
       return Array.isArray(ip) ? ip[0] : ip;
     },
@@ -41,6 +43,8 @@ export function createAiRateLimiter() {
       HTTP_STATUS.TOO_MANY_REQUESTS
     ),
     keyGenerator: (req) => {
+      const sessionId = req.headers['x-session-id'];
+      if (sessionId) return sessionId;
       const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
       return Array.isArray(ip) ? ip[0] : ip;
     },

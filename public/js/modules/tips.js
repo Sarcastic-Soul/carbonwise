@@ -4,7 +4,6 @@
  */
 
 import { getPersonalizedTips } from '../utils/api.js';
-import { markdownToSafeHtml } from '../utils/sanitizer.js';
 import { getLastCalculation } from './calculator.js';
 import { announceToScreenReader } from './accessibility.js';
 
@@ -31,7 +30,7 @@ export function checkTipsAvailability() {
     // Check if we have cached tips
     const cachedTips = localStorage.getItem('carbonwise_tips');
     if (cachedTips && content) {
-      content.innerHTML = markdownToSafeHtml(cachedTips);
+      content.innerHTML = window.DOMPurify.sanitize(window.marked.parse(cachedTips));
       content.hidden = false;
       if (btn) {
         btn.textContent = 'Regenerate My Tips';
@@ -68,7 +67,7 @@ async function handleGenerateTips() {
     const tips = result.data?.tips || 'No tips could be generated.';
 
     if (content) {
-      content.innerHTML = markdownToSafeHtml(tips);
+      content.innerHTML = window.DOMPurify.sanitize(window.marked.parse(tips));
       content.hidden = false;
       // Store in cache
       localStorage.setItem('carbonwise_tips', tips);
@@ -79,7 +78,7 @@ async function handleGenerateTips() {
     announceToScreenReader('Personalized eco tips have been generated.');
   } catch (error) {
     if (content) {
-      content.innerHTML = `<p style="color:var(--color-error)">Failed to generate tips: ${error.message}</p>`;
+      content.innerHTML = `<p class="error-text">Failed to generate tips: ${window.DOMPurify.sanitize(error.message)}</p>`;
       content.hidden = false;
     }
     announceToScreenReader('Error generating tips.');

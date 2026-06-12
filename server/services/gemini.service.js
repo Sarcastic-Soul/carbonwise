@@ -79,6 +79,11 @@ function initializeClient() {
 export async function generateChatResponse(userMessage, conversationHistory = []) {
   initializeClient();
 
+  // Truncate history to the last 10 turns to avoid exceeding context window
+  if (conversationHistory.length > 10) {
+    conversationHistory = conversationHistory.slice(-10);
+  }
+
   // Check cache for similar queries (only for stateless queries without history)
   if (conversationHistory.length === 0) {
     const cachedResponse = await cacheService.get(userMessage);

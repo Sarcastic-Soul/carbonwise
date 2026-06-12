@@ -5,17 +5,22 @@
 
 import { jest } from '@jest/globals';
 
+// Global state to trigger errors in mock
+global.mockGeminiError = false;
+
 // Mock the GoogleGenerativeAI module before importing the service
 jest.unstable_mockModule('@google/generative-ai', () => ({
   GoogleGenerativeAI: jest.fn().mockImplementation(() => ({
     getGenerativeModel: jest.fn().mockReturnValue({
       startChat: jest.fn().mockReturnValue({
-        sendMessage: jest.fn().mockResolvedValue({
-          response: { text: () => 'Mocked AI response about carbon footprint' },
+        sendMessage: jest.fn().mockImplementation(async () => {
+          if (global.mockGeminiError) throw new Error('API 500 Error');
+          return { response: { text: () => 'Mocked AI response about carbon footprint' } };
         }),
       }),
-      generateContent: jest.fn().mockResolvedValue({
-        response: { text: () => 'Mocked personalized tips' },
+      generateContent: jest.fn().mockImplementation(async () => {
+        if (global.mockGeminiError) throw new Error('API 500 Error');
+        return { response: { text: () => 'Mocked personalized tips' } };
       }),
     }),
   })),
@@ -57,6 +62,12 @@ describe('GeminiService', () => {
       expect(result).toBeDefined();
       expect(result.cached).toBe(false);
     });
+
+    it('should throw an error if the Gemini API fails', async () => {
+      global.mockGeminiError = true;
+      await expect(generateChatResponse('Will this fail?')).rejects.toThrow('Failed to generate AI response. Please try again later.');
+      global.mockGeminiError = false;
+    });
   });
 
   describe('generatePersonalizedTips', () => {
@@ -72,6 +83,13 @@ describe('GeminiService', () => {
       };
       const result = await generatePersonalizedTips(footprintData);
       expect(result.tips).toBe('Mocked personalized tips');
+    });
+
+    it('should throw an error if the Gemini API fails during tips generation', async () => {
+      const footprintData = { totalTonnes: 10 };
+      global.mockGeminiError = true;
+      await expect(generatePersonalizedTips(footprintData)).rejects.toThrow('Failed to generate personalized tips. Please try again later.');
+      global.mockGeminiError = false;
     });
   });
 });

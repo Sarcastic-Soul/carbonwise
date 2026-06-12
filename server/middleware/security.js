@@ -14,7 +14,7 @@ export function createSecurityHeaders() {
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        styleSrc: ["'self'", 'https://fonts.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         imgSrc: ["'self'", 'data:'],
         connectSrc: ["'self'"],
@@ -46,7 +46,7 @@ export function createCorsMiddleware() {
     origin: config.isProduction ? false : true,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Accept'],
-    maxAge: 86400,
+    maxAge: config.security.corsMaxAge,
   };
   return cors(corsOptions);
 }

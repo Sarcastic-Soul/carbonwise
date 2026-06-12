@@ -39,6 +39,13 @@ export const config = Object.freeze({
     /** @type {number} Time-to-live in milliseconds (default: 30 minutes) */
     ttl: 1800000,
   }),
+  /** @type {Object} Security configuration */
+  security: Object.freeze({
+    /** @type {number} CORS max age in seconds */
+    corsMaxAge: parseInt(process.env.CORS_MAX_AGE, 10) || 86400,
+    /** @type {string} JSON body limit */
+    bodyLimit: process.env.BODY_LIMIT || '10kb',
+  }),
 });
 
 /**

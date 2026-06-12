@@ -25,11 +25,18 @@ export async function apiRequest(endpoint, options = {}) {
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
   try {
+    let sessionId = localStorage.getItem('sessionId');
+    if (!sessionId) {
+      sessionId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2);
+      localStorage.setItem('sessionId', sessionId);
+    }
+
     const fetchOptions = {
       method,
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        'X-Session-ID': sessionId,
       },
       signal: controller.signal,
     };

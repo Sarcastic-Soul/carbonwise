@@ -60,28 +60,28 @@
             <div class="breakdown-item">
               <label class="breakdown-label" id="label-transport">Transport</label>
               <div class="bar-container" role="progressbar" aria-labelledby="label-transport" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                <div class="bar bar-transport" id="bar-transport" style="width: 0%"></div>
+                <div class="bar bar-transport" id="bar-transport"></div>
               </div>
               <span class="bar-value" id="val-transport">0 kg</span>
             </div>
             <div class="breakdown-item">
               <label class="breakdown-label" id="label-energy">Energy</label>
               <div class="bar-container" role="progressbar" aria-labelledby="label-energy" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                <div class="bar bar-energy" id="bar-energy" style="width: 0%"></div>
+                <div class="bar bar-energy" id="bar-energy"></div>
               </div>
               <span class="bar-value" id="val-energy">0 kg</span>
             </div>
             <div class="breakdown-item">
               <label class="breakdown-label" id="label-diet">Diet</label>
               <div class="bar-container" role="progressbar" aria-labelledby="label-diet" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                <div class="bar bar-diet" id="bar-diet" style="width: 0%"></div>
+                <div class="bar bar-diet" id="bar-diet"></div>
               </div>
               <span class="bar-value" id="val-diet">0 kg</span>
             </div>
             <div class="breakdown-item">
               <label class="breakdown-label" id="label-shopping">Shopping</label>
               <div class="bar-container" role="progressbar" aria-labelledby="label-shopping" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                <div class="bar bar-shopping" id="bar-shopping" style="width: 0%"></div>
+                <div class="bar bar-shopping" id="bar-shopping"></div>
               </div>
               <span class="bar-value" id="val-shopping">0 kg</span>
             </div>
@@ -118,35 +118,35 @@
             <div class="benchmark-item">
               <span class="benchmark-label">Global Avg</span>
               <div class="benchmark-bar-container">
-                <div class="benchmark-bar" style="width: 32%"></div>
+                <div class="benchmark-bar"></div>
               </div>
               <span class="benchmark-value">4.7t</span>
             </div>
             <div class="benchmark-item">
               <span class="benchmark-label">India</span>
               <div class="benchmark-bar-container">
-                <div class="benchmark-bar" style="width: 13%"></div>
+                <div class="benchmark-bar"></div>
               </div>
               <span class="benchmark-value">1.9t</span>
             </div>
             <div class="benchmark-item">
               <span class="benchmark-label">EU Avg</span>
               <div class="benchmark-bar-container">
-                <div class="benchmark-bar" style="width: 46%"></div>
+                <div class="benchmark-bar"></div>
               </div>
               <span class="benchmark-value">6.8t</span>
             </div>
             <div class="benchmark-item">
               <span class="benchmark-label">USA</span>
               <div class="benchmark-bar-container">
-                <div class="benchmark-bar" style="width: 100%"></div>
+                <div class="benchmark-bar"></div>
               </div>
               <span class="benchmark-value">15.5t</span>
             </div>
             <div class="benchmark-item benchmark-you">
               <span class="benchmark-label">You</span>
               <div class="benchmark-bar-container">
-                <div class="benchmark-bar benchmark-bar-you" id="benchmark-you-bar" style="width: 0%"></div>
+                <div class="benchmark-bar benchmark-bar-you" id="benchmark-you-bar"></div>
               </div>
               <span class="benchmark-value" id="benchmark-you-value">0t</span>
             </div>
@@ -360,6 +360,10 @@
       <p class="footer-tagline">Powered by Google Gemini AI &bull; Science-based emission factors from EPA, DEFRA &amp; IPCC</p>
     </div>
   </footer>
+
+  <!-- External Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@10.0.0/marked.min.js"></script>
 
   <!-- Application Scripts (ES Modules) -->
   <script type="module" src="/js/app.js"></script>

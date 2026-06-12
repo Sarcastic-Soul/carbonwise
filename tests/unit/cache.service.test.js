@@ -101,4 +101,51 @@ describe('CacheService', () => {
       expect(stats.hitRate).toBe('50.0%');
     });
   });
+
+  describe('Redis connection failures', () => {
+    it('should fallback to memory on Redis set failure', async () => {
+      cacheService.redis = {
+        set: jest.fn().mockRejectedValue(new Error('Redis Timeout')),
+      };
+      await cacheService.set('key', 'value');
+      expect(await cacheService.get('key')).toBe('value');
+      cacheService.redis = null;
+    });
+
+    it('should hit Redis for get and set', async () => {
+      cacheService.redis = {
+        set: jest.fn().mockResolvedValue(),
+        get: jest.fn().mockResolvedValue('redis_value'),
+      };
+      await cacheService.set('key', 'redis_value');
+      expect(await cacheService.get('key')).toBe('redis_value');
+      cacheService.redis = null;
+    });
+
+    it('should fallback to memory on Redis get miss', async () => {
+      await cacheService.set('key', 'value');
+      cacheService.redis = {
+        get: jest.fn().mockResolvedValue(null),
+      };
+      expect(await cacheService.get('key')).toBe('value');
+      cacheService.redis = null;
+    });
+
+    it('should fallback to memory on Redis get failure', async () => {
+      await cacheService.set('key', 'value');
+      cacheService.redis = {
+        get: jest.fn().mockRejectedValue(new Error('Redis Timeout')),
+      };
+      expect(await cacheService.get('key')).toBe('value');
+      cacheService.redis = null;
+    });
+
+    it('should handle Redis clear failure', async () => {
+      cacheService.redis = {
+        flushdb: jest.fn().mockRejectedValue(new Error('Redis Timeout')),
+      };
+      await expect(cacheService.clear()).resolves.toBeUndefined();
+      cacheService.redis = null;
+    });
+  });
 });

@@ -11,10 +11,10 @@ try {
     });
     logger.info('Upstash Redis cache initialized.');
   } else {
-    logger.info('Upstash Redis credentials not found, falling back to LRU Memory Cache.');
+    logger.error('CRITICAL ALERT: Upstash Redis credentials not found. Falling back to LRU Memory Cache. This may cause inconsistent state in multi-node deployments.');
   }
 } catch (e) {
-  logger.warn('Upstash Redis module not installed, falling back to LRU Memory Cache.');
+  logger.error(`CRITICAL ALERT: Upstash Redis initialization failed: ${e.message}. Falling back to LRU Memory Cache.`);
 }
 
 /**
@@ -32,7 +32,7 @@ class CacheService {
 
   generateKey(input) {
     if (typeof input !== 'string') return '';
-    return input.toLowerCase().replace(/\s+/g, ' ').trim();
+    return input.toLowerCase().replace(/[^\w\s]|_/g, '').replace(/\s+/g, ' ').trim();
   }
 
   async get(key) {
