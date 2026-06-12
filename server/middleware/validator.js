@@ -1,5 +1,4 @@
 import { body, validationResult } from 'express-validator';
-import { createErrorResponse } from '../utils/helpers.js';
 import { HTTP_STATUS, APP_CONSTANTS } from '../utils/constants.js';
 
 /**
@@ -98,11 +97,11 @@ export function handleValidationErrors(req, res, next) {
       success: false,
       error: {
         message: 'Validation failed. Please check your input.',
-        code: HTTP_STATUS.BAD_REQUEST,
+        statusCode: HTTP_STATUS.BAD_REQUEST,
         details: formattedErrors,
-      }
+      },
     });
   }
 
-  next();
+  return next();
 }

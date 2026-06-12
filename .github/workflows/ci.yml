@@ -28,6 +28,9 @@ jobs:
       
     - name: Security Audit
       run: npm audit --audit-level=high
+
+    - name: Lint
+      run: npm run lint
       
     - name: Type Check
       run: npm run typecheck

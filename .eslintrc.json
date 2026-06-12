@@ -23,5 +23,19 @@
     "prefer-template": "error",
     "no-param-reassign": "warn",
     "consistent-return": "warn"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["public/js/**/*.js"],
+      "env": {
+        "browser": true,
+        "node": false,
+        "jest": false
+      },
+      "globals": {
+        "DOMPurify": "readonly",
+        "marked": "readonly"
+      }
+    }
+  ]
 }

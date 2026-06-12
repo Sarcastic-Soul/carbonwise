@@ -80,12 +80,12 @@ export async function generateChatResponse(userMessage, conversationHistory = []
   initializeClient();
 
   // Truncate history to the last 10 turns to avoid exceeding context window
-  if (conversationHistory.length > 10) {
-    conversationHistory = conversationHistory.slice(-10);
-  }
+  const truncatedHistory = conversationHistory.length > 10
+    ? conversationHistory.slice(-10)
+    : conversationHistory;
 
   // Check cache for similar queries (only for stateless queries without history)
-  if (conversationHistory.length === 0) {
+  if (truncatedHistory.length === 0) {
     const cachedResponse = await cacheService.get(userMessage);
     if (cachedResponse) {
       logger.debug('Returning cached chat response');
@@ -95,7 +95,7 @@ export async function generateChatResponse(userMessage, conversationHistory = []
 
   try {
     const chat = model.startChat({
-      history: conversationHistory,
+      history: truncatedHistory,
       generationConfig: {
         temperature: 0.7,
         topP: 0.9,
@@ -108,7 +108,7 @@ export async function generateChatResponse(userMessage, conversationHistory = []
     const responseText = result.response.text();
 
     // Cache the response for future similar queries
-    if (conversationHistory.length === 0) {
+    if (truncatedHistory.length === 0) {
       await cacheService.set(userMessage, responseText);
     }
 

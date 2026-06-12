@@ -3,7 +3,6 @@
  * Tests validation rules and error handling.
  */
 
-import { jest } from '@jest/globals';
 import {
   sanitizeInput,
   truncateString,

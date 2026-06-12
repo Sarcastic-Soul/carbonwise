@@ -2,7 +2,6 @@
  * Integration tests for calculator routes.
  */
 
-import { jest } from '@jest/globals';
 import supertest from 'supertest';
 
 process.env.GEMINI_API_KEY = 'test-key';

@@ -3,7 +3,6 @@
  * Tests emission calculations for all categories using science-based factors.
  */
 
-import { jest } from '@jest/globals';
 import {
   calculateTransportEmissions,
   calculateEnergyEmissions,

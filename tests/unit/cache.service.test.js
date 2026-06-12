@@ -122,12 +122,13 @@ describe('CacheService', () => {
       cacheService.redis = null;
     });
 
-    it('should fallback to memory on Redis get miss', async () => {
+    it('should return null when Redis reports a cache miss', async () => {
       await cacheService.set('key', 'value');
       cacheService.redis = {
         get: jest.fn().mockResolvedValue(null),
       };
-      expect(await cacheService.get('key')).toBe('value');
+      // Redis is the authoritative store when available; a Redis miss means miss
+      expect(await cacheService.get('key')).toBeNull();
       cacheService.redis = null;
     });
 

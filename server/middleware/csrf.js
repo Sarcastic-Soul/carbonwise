@@ -14,7 +14,11 @@ const {
   },
   size: 64,
   ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
-  getTokenFromRequest: (req) => {
+  getSessionIdentifier: (req) => {
+    const sessionId = req.headers['x-session-id'];
+    return (Array.isArray(sessionId) ? sessionId[0] : sessionId) || 'anonymous';
+  },
+  getCsrfTokenFromRequest: (req) => {
     return req.headers['x-csrf-token'] || req.body['csrf-token'];
   },
 });

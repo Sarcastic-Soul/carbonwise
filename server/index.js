@@ -57,7 +57,7 @@ export function createApp() {
 
   // Endpoint to get CSRF token
   app.get('/api/csrf-token', (req, res) => {
-    res.json({ token: generateToken(res, req) });
+    res.json({ token: generateToken(req, res) });
   });
 
   // General rate limiter

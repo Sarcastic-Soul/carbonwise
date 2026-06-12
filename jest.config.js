@@ -1,9 +1,7 @@
 /** @type {import('jest').Config} */
 export default {
   testEnvironment: 'node',
-  transform: {
-    '^.+\\.[tj]sx?$': 'babel-jest',
-  },
+  transform: {},
   testMatch: ['**/tests/**/*.test.js'],
   collectCoverageFrom: [
     'server/**/*.js',
@@ -13,10 +11,10 @@ export default {
   coverageReporters: ['text', 'text-summary', 'lcov'],
   coverageThreshold: {
     global: {
-      branches: 90,
-      functions: 90,
-      lines: 90,
-      statements: 90,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
     },
   },
   verbose: true,

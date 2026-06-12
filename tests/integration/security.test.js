@@ -3,7 +3,6 @@
  * Verifies that all security headers and protections are active.
  */
 
-import { jest } from '@jest/globals';
 import supertest from 'supertest';
 
 process.env.GEMINI_API_KEY = 'test-key';

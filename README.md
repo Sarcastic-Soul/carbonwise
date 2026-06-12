@@ -130,7 +130,7 @@ The app will be available at `http://localhost:8080`.
 ## Testing
 
 ```bash
-npm test              # Run all 66 tests
+npm test              # Run all 76 tests
 npm run test:unit     # Unit tests only
 npm run test:integration  # Integration tests only
 npm run test:coverage # Generate coverage report
@@ -158,9 +158,9 @@ npm run test:coverage # Generate coverage report
 | **Security Headers** | X-Content-Type-Options, X-Frame-Options, Referrer-Policy |
 | **Non-Root Docker** | Container runs as `node` user on heavily-pinned Alpine |
 
-## Accessibility
+## Accessibility-First Design
 
-The platform follows **WCAG 2.1 AA** guidelines:
+The platform was built from the ground up with an **accessibility-first design** philosophy, adhering strictly to **WCAG 2.1 AA** guidelines:
 
 - Semantic HTML5 elements (`<main>`, `<nav>`, `<header>`, `<footer>`, `<section>`)
 - Skip navigation link for keyboard users

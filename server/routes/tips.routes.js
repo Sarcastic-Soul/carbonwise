@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
 
     logger.info('Tips generated', { cached, totalTonnes: footprintData.totalTonnes });
 
-    res.status(HTTP_STATUS.OK).json(
+    return res.status(HTTP_STATUS.OK).json(
       createSuccessResponse({
         tips,
         cached,
@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
     );
   } catch (error) {
     logger.error('Tips endpoint error', { error: error.message });
-    res
+    return res
       .status(HTTP_STATUS.INTERNAL_ERROR)
       .json(createErrorResponse('Failed to generate personalized tips.'));
   }

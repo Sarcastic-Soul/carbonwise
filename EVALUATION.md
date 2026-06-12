@@ -33,7 +33,7 @@ Instead of building a monolithic script, CarbonWise uses a strict layered archit
 ### Key Rationale and Architectural Decisions
 
 * **Decision: Native ES Modules instead of CommonJS (`require`)**
-  * *Why it’s the best:* ES Modules are static, meaning they are analyzed during compilation. This enables modern tooling benefits like dead-code elimination (tree shaking) and prevents global namespace pollution, keeping memory footprints clean.
+  * *Why it’s the best:* ES Modules are static, meaning they are analyzed during compilation. This enables modern tooling benefits like dead-code elimination (tree shaking) and prevents global namespace pollution, keeping memory footprints clean. We recently completed a full transition to pure ES Modules for the frontend, eliminating global browser object reliance and strictly enforcing code quality through environment-aware ESLint configurations (`"browser": true`).
 * **Decision: Deep Configuration Immutability (`server/config/environment.js`)**
   * *Why it’s the best:* The entire environment configuration is loaded, validated once at startup (`validateConfig`), and exported as a deep-frozen object (`Object.freeze`). This prevents runtime configuration pollution or mutation, guaranteeing configuration predictability.
 * **Decision: Standardized JSON REST Response Structure**
@@ -91,11 +91,13 @@ PASS  tests/unit/carbon.service.test.js
 PASS  tests/unit/cache.service.test.js
 PASS  tests/unit/validator.test.js
 PASS  tests/unit/gemini.service.test.js
+PASS  tests/unit/environment.test.js
+PASS  tests/unit/calculator.frontend.test.js
 PASS  tests/integration/calculator.routes.test.js
 PASS  tests/integration/security.test.js
 
-Test Suites: 6 passed, 6 total
-Tests:       66 passed, 66 total
+Test Suites: 8 passed, 8 total
+Tests:       76 passed, 76 total
 ```
 
 1. **Service Unit Testing**:
