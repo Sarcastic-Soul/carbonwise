@@ -14,12 +14,12 @@ jest.unstable_mockModule('@google/generative-ai', () => ({
     getGenerativeModel: jest.fn().mockReturnValue({
       startChat: jest.fn().mockReturnValue({
         sendMessage: jest.fn().mockImplementation(async () => {
-          if (global.mockGeminiError) throw new Error('API 500 Error');
+          if (global.mockGeminiError) {throw new Error('API 500 Error');}
           return { response: { text: () => 'Mocked AI response about carbon footprint' } };
         }),
       }),
       generateContent: jest.fn().mockImplementation(async () => {
-        if (global.mockGeminiError) throw new Error('API 500 Error');
+        if (global.mockGeminiError) {throw new Error('API 500 Error');}
         return { response: { text: () => 'Mocked personalized tips' } };
       }),
     }),

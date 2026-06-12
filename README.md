@@ -92,8 +92,8 @@ CarbonWise follows a **layered, modular architecture** with strict separation of
 | Frontend | HTML5 + CSS3 + JS (ES Modules) | Accessible single-page application |
 | Security | Helmet + CORS + express-rate-limit | HTTP hardening |
 | Validation | express-validator | Input sanitization |
-| Testing | Jest + Supertest | Unit & integration tests |
-| Deployment | Docker + Google Cloud Run | Containerized hosting |
+| Testing | Jest + Supertest + Playwright | Unit, integration & accessibility (Axe-Core) tests |
+| Deployment | Docker + Google Cloud Run | Reproducible containerized hosting (node:20.14.0-alpine) |
 
 ## Getting Started
 
@@ -107,7 +107,7 @@ CarbonWise follows a **layered, modular architecture** with strict separation of
 
 ```bash
 git clone <repository-url>
-cd prompt-wars
+cd carbonwise
 npm install
 ```
 
@@ -138,8 +138,9 @@ npm run test:coverage # Generate coverage report
 
 ### Test Coverage
 
-- **Unit Tests**: Carbon calculations, cache service, Gemini service (mocked), helpers/validators
-- **Integration Tests**: Calculator API endpoints, security headers verification, input validation, error handling
+- **Unit Tests**: Carbon calculations, cache service, Gemini service (mocked), helpers/validators. Now includes pure ESM frontend module tests via jsdom.
+- **Integration Tests**: Calculator API endpoints, security headers verification, input validation, error handling.
+- **E2E & Accessibility**: Playwright orchestrates end-to-end browser workflows, actively running Axe-Core audits in CI for guaranteed WCAG 2.1 AA compliance.
 
 ## Security Measures
 
@@ -147,13 +148,15 @@ npm run test:coverage # Generate coverage report
 |:---|:---|
 | **CSP Headers** | Strict Content-Security-Policy via Helmet |
 | **HSTS** | HTTP Strict Transport Security enabled |
-| **Rate Limiting** | 100 req/15min general, 50 req/15min for AI |
+| **CSRF Protection** | strict Double-Submit Token validation (csrf-csrf) combined with secure cookies |
+| **Rate Limiting** | Enterprise-grade Redis-backed global rate limiting (rate-limit-redis) |
 | **Input Validation** | express-validator on all POST endpoints |
 | **XSS Prevention** | HTML entity escaping on both server and client |
 | **API Key Security** | Environment variables only, never committed |
+| **Supply Chain Safety**| 100% strictly pinned dependencies and CI npm audits to prevent auto-upgraded vulnerabilities |
 | **Body Size Limit** | 10kb JSON body limit |
 | **Security Headers** | X-Content-Type-Options, X-Frame-Options, Referrer-Policy |
-| **Non-Root Docker** | Container runs as `node` user |
+| **Non-Root Docker** | Container runs as `node` user on heavily-pinned Alpine |
 
 ## Accessibility
 
@@ -176,7 +179,7 @@ The platform follows **WCAG 2.1 AA** guidelines:
 1. **Individual Focus**: The platform targets individual carbon footprint awareness, not enterprise/corporate use.
 2. **Emission Factors**: Global average emission factors are used. Regional factors may vary (e.g., electricity grid intensity).
 3. **Simplified Categories**: The calculator covers the 4 highest-impact lifestyle categories: Transport, Energy, Diet, and Shopping.
-4. **Client-Side Persistence**: User calculation history is stored in `localStorage` for simplicity (no database required).
+4. **Resilient Persistence**: User calculation history is securely backed up and persisted cross-device using session-driven Redis storage (`/api/history`). Never lose your history on a cache-clear!
 5. **Single Currency**: All emissions are expressed in kg/tonnes CO₂ equivalent (CO₂e).
 
 ## Project Structure

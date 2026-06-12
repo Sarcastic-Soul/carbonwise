@@ -1,8 +1,9 @@
 /** @type {import('jest').Config} */
 export default {
   testEnvironment: 'node',
-  transform: {},
-  extensionsToTreatAsEsm: [],
+  transform: {
+    '^.+\\.[tj]sx?$': 'babel-jest',
+  },
   testMatch: ['**/tests/**/*.test.js'],
   collectCoverageFrom: [
     'server/**/*.js',

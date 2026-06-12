@@ -94,9 +94,14 @@ export function handleValidationErrors(req, res, next) {
       message: error.msg,
     }));
 
-    return res.status(HTTP_STATUS.BAD_REQUEST).json(
-      createErrorResponse('Validation failed. Please check your input.', HTTP_STATUS.BAD_REQUEST)
-    );
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({
+      success: false,
+      error: {
+        message: 'Validation failed. Please check your input.',
+        code: HTTP_STATUS.BAD_REQUEST,
+        details: formattedErrors,
+      }
+    });
   }
 
   next();

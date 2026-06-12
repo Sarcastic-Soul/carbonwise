@@ -3,7 +3,9 @@ import compression from 'compression';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
+import cookieParser from 'cookie-parser';
 import { config, validateConfig } from './config/environment.js';
+import { csrfProtection, generateToken } from './middleware/csrf.js';
 import { createSecurityHeaders, createCorsMiddleware } from './middleware/security.js';
 import { createRateLimiter, createAiRateLimiter } from './middleware/rateLimiter.js';
 import { globalErrorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -12,6 +14,7 @@ import { logger } from './utils/logger.js';
 import chatRoutes from './routes/chat.routes.js';
 import calculatorRoutes from './routes/calculator.routes.js';
 import tipsRoutes from './routes/tips.routes.js';
+import historyRoutes from './routes/history.routes.js';
 
 /**
  * Resolve __dirname for ES modules.
@@ -44,6 +47,19 @@ export function createApp() {
   // Parse JSON request bodies with a size limit
   app.use(express.json({ limit: config.security.bodyLimit }));
 
+  // Parse cookies
+  app.use(cookieParser(process.env.COOKIE_SECRET || 'super-secret'));
+
+  // CSRF Protection (ignored for GET, applied to POST/PUT/DELETE)
+  if (config.nodeEnv !== 'test') {
+    app.use('/api', csrfProtection);
+  }
+
+  // Endpoint to get CSRF token
+  app.get('/api/csrf-token', (req, res) => {
+    res.json({ token: generateToken(res, req) });
+  });
+
   // General rate limiter
   app.use(createRateLimiter());
 
@@ -65,6 +81,7 @@ export function createApp() {
 
   // Calculator routes use general rate limiting
   app.use('/api/calculator', calculatorRoutes);
+  app.use('/api/history', historyRoutes);
 
   // Health check endpoint
   app.get('/api/health', (_req, res) => {

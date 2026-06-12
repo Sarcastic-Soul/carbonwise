@@ -106,12 +106,28 @@ function renderResults(data) {
   resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function saveToLocalStorage(data) {
+async function saveToLocalStorage(data) {
   try {
     const existing = JSON.parse(localStorage.getItem('carbonwise_history') || '[]');
     existing.push({ timestamp: new Date().toISOString(), ...data });
     localStorage.setItem('carbonwise_history', JSON.stringify(existing.slice(-10)));
     localStorage.setItem('carbonwise_latest', JSON.stringify(data));
     localStorage.removeItem('carbonwise_tips'); // Clear outdated tips cache
-  } catch (_e) { /* localStorage unavailable */ }
+
+    // Also persist to backend
+    let sessionId = localStorage.getItem('carbonwise_session');
+    if (!sessionId) {
+      sessionId = 'sess_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('carbonwise_session', sessionId);
+    }
+    
+    await fetch('/api/history', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-session-id': sessionId
+      },
+      body: JSON.stringify({ data })
+    });
+  } catch (_e) { /* silent fail */ }
 }

@@ -22,6 +22,10 @@ try {
  * with a fallback to in-memory LRU caching.
  */
 class CacheService {
+  /**
+   * @param {number} [maxSize=config.cache.maxSize] Maximum number of items for LRU fallback
+   * @param {number} [ttl=config.cache.ttl] Time-to-live for cache entries in milliseconds
+   */
   constructor(maxSize = config.cache.maxSize, ttl = config.cache.ttl) {
     this.store = new Map();
     this.maxSize = maxSize;
@@ -30,11 +34,22 @@ class CacheService {
     this.redis = RedisClient;
   }
 
+  /**
+   * Generates a normalized cache key.
+   * @param {string} input - The input string to normalize
+   * @returns {string} Normalized cache key
+   */
   generateKey(input) {
-    if (typeof input !== 'string') return '';
+    if (typeof input !== 'string') {return '';}
     return input.toLowerCase().replace(/[^\w\s]|_/g, '').replace(/\s+/g, ' ').trim();
   }
 
+  /**
+   * Retrieves an item from the cache.
+   * LRU Policy: Re-inserts the item into the Map to mark it as recently used.
+   * @param {string} key - The cache key to retrieve
+   * @returns {Promise<any>} The cached value or null if not found/expired
+   */
   async get(key) {
     const normalizedKey = this.generateKey(key);
     
@@ -69,6 +84,7 @@ class CacheService {
       return null;
     }
 
+    // LRU update: remove and re-insert to put at the end of Map (most recently used)
     this.store.delete(normalizedKey);
     this.store.set(normalizedKey, entry);
     this.stats.hits++;
@@ -76,6 +92,13 @@ class CacheService {
     return entry.value;
   }
 
+  /**
+   * Stores an item in the cache.
+   * LRU Eviction Policy: If the store exceeds maxSize, the oldest entry (first in Map) is evicted.
+   * @param {string} key - The cache key
+   * @param {any} value - The value to store
+   * @returns {Promise<void>}
+   */
   async set(key, value) {
     const normalizedKey = this.generateKey(key);
 
@@ -91,6 +114,7 @@ class CacheService {
 
     // Fallback to Memory
     if (this.store.size >= this.maxSize && !this.store.has(normalizedKey)) {
+      // LRU eviction: the first item in Map.keys() is the oldest inserted
       const oldestKey = this.store.keys().next().value;
       this.store.delete(oldestKey);
       logger.debug('Memory cache eviction (LRU)', { evictedKey: oldestKey });
@@ -103,6 +127,10 @@ class CacheService {
     logger.debug('Memory cache set', { key: normalizedKey, storeSize: this.store.size });
   }
 
+  /**
+   * Clears the entire cache (both Redis and memory).
+   * @returns {Promise<void>}
+   */
   async clear() {
     if (this.redis) {
       try {
@@ -116,6 +144,10 @@ class CacheService {
     logger.info('Cache cleared');
   }
 
+  /**
+   * Retrieves cache statistics.
+   * @returns {{type: string, size: number, maxSize: number, hits: number, misses: number, hitRate: string}}
+   */
   getStats() {
     const total = this.stats.hits + this.stats.misses;
     const hitRate = total > 0 ? ((this.stats.hits / total) * 100).toFixed(1) : '0.0';

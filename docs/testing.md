@@ -15,14 +15,18 @@ The testing suite contains **66 automated tests** structured to target specific 
    │     ├── cache.service.test.js     # LRU key normalization and eviction
    │     ├── carbon.service.test.js    # Emission factors and mathematical equations
    │     ├── gemini.service.test.js    # AI models response and prompt flows (Mocked SDK)
-   │     └── validator.test.js         # Input sanitization and helper validations
+   │     ├── validator.test.js         # Input sanitization and helper validations
+   │     └── calculator.frontend.test.js # Pure ES Module frontend logic using JSDOM
    │
-   └──► Integration Tests (Using Supertest to spin up HTTP router stacks)
-         ├── calculator.routes.test.js # End-to-end calculations endpoint
-         └── security.test.js          # Security header checks and rate limiting
+   ├──► Integration Tests (Using Supertest to spin up HTTP router stacks)
+   │     ├── calculator.routes.test.js # End-to-end calculations endpoint
+   │     └── security.test.js          # Security header checks and rate limiting
+   │
+   └──► E2E & Accessibility Tests (Using Playwright & Axe-Core)
+         └── accessibility.spec.js     # Fully automated browser WCAG 2.1 AA audits
 ```
 
-We utilize **Jest** as the core test runner because it supports modern mock capabilities, combined with **Supertest** to execute REST lifecycle validations.
+We utilize **Jest** as the core test runner because it supports modern mock capabilities, combined with **Supertest** to execute REST lifecycle validations. The test execution avoids experimental ESM flags by employing a robust **Babel configuration** for fully-stable ES Module compilation, and relies on **Playwright** for enterprise-grade frontend interaction and axe-core assertions.
 
 ---
 
