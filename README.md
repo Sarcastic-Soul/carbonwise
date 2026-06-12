@@ -127,6 +127,13 @@ npm start         # Production mode
 
 The app will be available at `http://localhost:8080`.
 
+### Deploying to Cloud Run
+
+You can automatically package and deploy CarbonWise to Google Cloud Run:
+```bash
+gcloud run deploy carbonwise --source . --project promptwars-493516 --region asia-south1 --allow-unauthenticated
+```
+
 ## Testing
 
 ```bash
